@@ -1,8 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/authentication/screens/signinscreen.dart';
+import 'package:new_instagram_clone/authentication/services/authservices.dart';
 import 'package:new_instagram_clone/authentication/widgets/authbutton.dart';
 import 'package:new_instagram_clone/authentication/widgets/inputtextfield.dart';
+import 'package:new_instagram_clone/common/alert_dialog.dart';
+import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -13,17 +18,19 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController idController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    idController.dispose();
+    emailController.dispose();
     nameController.dispose();
     usernameController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
   }
 
@@ -50,12 +57,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SigninScreen(),
-                    ),
-                  );
+                  pushReplacement(context, const SigninScreen());
                 },
                 child: Text(
                   'Sign in.',
@@ -85,33 +87,74 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 25),
               InputTextfield(
-                hintText: 'Phone number or email',
-                controller: idController,
+                hintText: 'Email',
+                controller: emailController,
+                type: TextInputType.emailAddress,
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Name',
                 controller: nameController,
+                type: TextInputType.name,
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Username',
                 controller: usernameController,
+                type: TextInputType.text,
+              ),
+              const SizedBox(height: 15),
+              InputTextfield(
+                hintText: 'Phone number',
+                controller: phoneController,
+                type: TextInputType.phone,
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Password',
                 controller: passwordController,
                 isPassword: true,
+                type: TextInputType.text,
               ),
               const SizedBox(height: 25),
               AuthButton(
                 text: 'Sign up',
-                function: () {},
-                disable:
-                    idController.text.isEmpty || passwordController.text.isEmpty
-                        ? true
-                        : false,
+                function: () async {
+                  String res = await AuthServices().signUpUser(
+                    emailController.text,
+                    nameController.text,
+                    usernameController.text,
+                    phoneController.text,
+                    passwordController.text,
+                  );
+                  if (res == 'success') {
+                    showAlertDialog(
+                      context,
+                      'Account Created Successfully',
+                      'Get Started',
+                      'Back to Log In',
+                      () {},
+                      () {
+                        pushReplacement(context, const SigninScreen());
+                      },
+                    );
+                  } else {
+                    showAlertDialog(
+                      context,
+                      res,
+                      'OK',
+                      '',
+                      () {
+                        Navigator.pop(context);
+                      },
+                      () {},
+                    );
+                  }
+                },
+                disable: emailController.text.isEmpty ||
+                        passwordController.text.isEmpty
+                    ? true
+                    : false,
               ),
             ],
           ),

@@ -84,12 +84,14 @@ class _SigninScreenState extends State<SigninScreen> {
                 hintText: 'Phone number, email or username',
                 controller: idController,
                 isPassword: false,
+                type: TextInputType.text,
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Password',
                 controller: passwordController,
                 isPassword: true,
+                type: TextInputType.text,
               ),
               const SizedBox(height: 25),
               AuthButton(

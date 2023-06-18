@@ -5,12 +5,14 @@ class InputTextfield extends StatefulWidget {
   final String hintText;
   final TextEditingController controller;
   final bool isPassword;
+  final TextInputType type;
 
   const InputTextfield({
     super.key,
     required this.hintText,
     required this.controller,
     this.isPassword = false,
+    required this.type,
   });
 
   @override
@@ -27,6 +29,7 @@ class _InputTextfieldState extends State<InputTextfield> {
       obscureText: widget.isPassword ? visible : false,
       cursorColor: primaryColor,
       cursorWidth: 0.5,
+      keyboardType: widget.type,
       decoration: InputDecoration(
         hintText: widget.hintText,
         contentPadding: const EdgeInsets.only(

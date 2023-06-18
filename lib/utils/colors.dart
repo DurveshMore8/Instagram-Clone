@@ -5,3 +5,4 @@ Color primaryColor = Colors.white;
 Color textfieldColor = Colors.grey.shade900;
 Color greyColor = Colors.grey;
 Color blueColor = Colors.blue;
+Color redColor = Colors.red;
