@@ -70,11 +70,12 @@ flutter:
     - assets/icons/home_filled.svg
     - assets/icons/home_outlined.svg
     - assets/icons/search.svg
-    - assets/icons/add.svg
+    - assets/icons/add_post.svg
     - assets/icons/reels_outlined.svg
     - assets/icons/reels_filled.svg
     - assets/icons/heart.svg
     - assets/icons/messenger.svg
+    - assets/icons/menu.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

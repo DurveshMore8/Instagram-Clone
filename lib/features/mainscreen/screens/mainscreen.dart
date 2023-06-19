@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/home_screen.dart';
+import 'package:new_instagram_clone/features/profile/screens/profile_screen.dart';
 import 'package:new_instagram_clone/features/search/screens/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -55,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
           const BottomNavigationBarItem(
             icon: SvgIcons(
-              path: 'assets/icons/add.svg',
+              path: 'assets/icons/add_post.svg',
               parameters: 25,
             ),
             label: '',
@@ -87,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
           SearchScreen(),
           Text('Add Post'),
           Text('Reels'),
-          Text('Profile'),
+          ProfileScreen(),
         ],
       ),
     );
