@@ -20,14 +20,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          type: BottomNavigationBarType.fixed,
           backgroundColor: backgroundColor,
           selectedIconTheme: IconThemeData(
             color: primaryColor,
-            size: 1,
           ),
           unselectedIconTheme: IconThemeData(
             color: primaryColor,
-            size: 30,
           ),
         ),
       ),

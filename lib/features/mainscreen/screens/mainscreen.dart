@@ -9,7 +9,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int page = 0;
+  int _page = 0;
   final PageController _pageController = PageController();
 
   @override
@@ -18,18 +18,28 @@ class _MainScreenState extends State<MainScreen> {
     _pageController.dispose();
   }
 
-  void pageChanged(int page) {}
+  void jumpToPage(int page) {
+    _pageController.jumpToPage(page);
+  }
+
+  void pageChanged(int page) {
+    setState(() {
+      _page = page;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: page,
-        type: BottomNavigationBarType.fixed,
+        currentIndex: _page,
+        onTap: jumpToPage,
         items: [
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: SvgIcons(
-              path: 'assets/icons/home_filled.svg',
+              path: _page == 0
+                  ? 'assets/icons/home_filled.svg'
+                  : 'assets/icons/home_outlined.svg',
               parameters: 30,
             ),
             label: '',
@@ -48,23 +58,26 @@ class _MainScreenState extends State<MainScreen> {
             ),
             label: '',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: SvgIcons(
-              path: 'assets/icons/reels_outlined.svg',
+              path: _page == 3
+                  ? 'assets/icons/reels_filled.svg'
+                  : 'assets/icons/reels_outlined.svg',
               parameters: 25,
             ),
             label: '',
           ),
           BottomNavigationBarItem(
             icon: CircleAvatar(
-              child: Image.asset('assets/images/defaultProfile.jpg'),
               radius: 18,
+              child: Image.asset('assets/images/defaultProfile.jpg'),
             ),
             label: '',
           ),
         ],
       ),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: pageChanged,
         children: [
