@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
+import 'package:new_instagram_clone/features/home/screens/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -80,8 +81,8 @@ class _MainScreenState extends State<MainScreen> {
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: pageChanged,
-        children: [
-          Text('Home'),
+        children: const [
+          HomeScreen(),
           Text('Search'),
           Text('Add Post'),
           Text('Reels'),

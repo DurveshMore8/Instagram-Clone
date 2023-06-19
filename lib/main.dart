@@ -19,6 +19,9 @@ class MyApp extends StatelessWidget {
       title: 'New Instagram Clone',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
+        appBarTheme: AppBarTheme(
+          backgroundColor: backgroundColor,
+        ),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
           backgroundColor: backgroundColor,
