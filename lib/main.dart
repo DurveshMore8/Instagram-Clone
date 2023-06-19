@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:new_instagram_clone/authentication/screens/signinscreen.dart';
+import 'package:new_instagram_clone/features/authentication/screens/signinscreen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 void main() async {
@@ -19,6 +19,17 @@ class MyApp extends StatelessWidget {
       title: 'New Instagram Clone',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: backgroundColor,
+          selectedIconTheme: IconThemeData(
+            color: primaryColor,
+            size: 1,
+          ),
+          unselectedIconTheme: IconThemeData(
+            color: primaryColor,
+            size: 30,
+          ),
+        ),
       ),
       home: const SigninScreen(),
     );

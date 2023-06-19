@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:new_instagram_clone/authentication/screens/signupscreen.dart';
-import 'package:new_instagram_clone/authentication/widgets/authbutton.dart';
-import 'package:new_instagram_clone/authentication/widgets/inputtextfield.dart';
+import 'package:new_instagram_clone/features/authentication/screens/signupscreen.dart';
+import 'package:new_instagram_clone/features/authentication/widgets/authbutton.dart';
+import 'package:new_instagram_clone/features/authentication/widgets/inputtextfield.dart';
+import 'package:new_instagram_clone/common/navigation.dart';
+import 'package:new_instagram_clone/features/mainscreen/screens/mainscreen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -46,12 +48,7 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignupScreen(),
-                    ),
-                  );
+                  pushReplacement(context, const SignupScreen());
                 },
                 child: Text(
                   'Sign up.',
@@ -96,11 +93,7 @@ class _SigninScreenState extends State<SigninScreen> {
               const SizedBox(height: 25),
               AuthButton(
                 text: 'Log in',
-                function: () {},
-                disable:
-                    idController.text.isEmpty || passwordController.text.isEmpty
-                        ? true
-                        : false,
+                function: () => pushReplacement(context, const MainScreen()),
               ),
               const SizedBox(height: 15),
               Padding(

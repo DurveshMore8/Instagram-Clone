@@ -2,12 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:new_instagram_clone/authentication/screens/signinscreen.dart';
-import 'package:new_instagram_clone/authentication/services/authservices.dart';
-import 'package:new_instagram_clone/authentication/widgets/authbutton.dart';
-import 'package:new_instagram_clone/authentication/widgets/inputtextfield.dart';
+import 'package:new_instagram_clone/features/authentication/screens/signinscreen.dart';
+import 'package:new_instagram_clone/features/authentication/services/authservices.dart';
+import 'package:new_instagram_clone/features/authentication/widgets/authbutton.dart';
+import 'package:new_instagram_clone/features/authentication/widgets/inputtextfield.dart';
 import 'package:new_instagram_clone/common/alert_dialog.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
+import 'package:new_instagram_clone/features/mainscreen/screens/mainscreen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -34,6 +35,35 @@ class _SignupScreenState extends State<SignupScreen> {
     passwordController.dispose();
   }
 
+  void signUp() async {
+    String res = await AuthServices().signUpUser(
+      emailController.text,
+      nameController.text,
+      usernameController.text,
+      phoneController.text,
+      passwordController.text,
+    );
+    if (res == 'success') {
+      showAlertDialog(
+        context,
+        'Account Created Successfully',
+        'Get Started',
+        'Back to Log In',
+        () => pushReplacement(context, const MainScreen()),
+        () => pushReplacement(context, const SigninScreen()),
+      );
+    } else {
+      showAlertDialog(
+        context,
+        res,
+        'OK',
+        'Cancel',
+        () => pop(context),
+        () => pushReplacement(context, const SigninScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,9 +86,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 'Already have an account? ',
               ),
               GestureDetector(
-                onTap: () {
-                  pushReplacement(context, const SigninScreen());
-                },
+                onTap: () => pushReplacement(context, const SigninScreen()),
                 child: Text(
                   'Sign in.',
                   style: TextStyle(
@@ -119,42 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 25),
               AuthButton(
                 text: 'Sign up',
-                function: () async {
-                  String res = await AuthServices().signUpUser(
-                    emailController.text,
-                    nameController.text,
-                    usernameController.text,
-                    phoneController.text,
-                    passwordController.text,
-                  );
-                  if (res == 'success') {
-                    showAlertDialog(
-                      context,
-                      'Account Created Successfully',
-                      'Get Started',
-                      'Back to Log In',
-                      () {},
-                      () {
-                        pushReplacement(context, const SigninScreen());
-                      },
-                    );
-                  } else {
-                    showAlertDialog(
-                      context,
-                      res,
-                      'OK',
-                      '',
-                      () {
-                        Navigator.pop(context);
-                      },
-                      () {},
-                    );
-                  }
-                },
-                disable: emailController.text.isEmpty ||
-                        passwordController.text.isEmpty
-                    ? true
-                    : false,
+                function: signUp,
               ),
             ],
           ),

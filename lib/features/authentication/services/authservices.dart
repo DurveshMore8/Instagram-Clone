@@ -29,10 +29,10 @@ class AuthServices {
     String res = '';
 
     try {
-      if (email.isNotEmpty ||
-          name.isNotEmpty ||
-          username.isNotEmpty ||
-          phone.isNotEmpty ||
+      if (email.isNotEmpty &&
+          name.isNotEmpty &&
+          username.isNotEmpty &&
+          phone.isNotEmpty &&
           password.isNotEmpty) {
         UserCredential credential =
             await _firebaseAuth.createUserWithEmailAndPassword(
