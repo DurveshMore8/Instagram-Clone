@@ -4,12 +4,10 @@ import 'package:new_instagram_clone/utils/colors.dart';
 class AuthButton extends StatelessWidget {
   final String text;
   final VoidCallback function;
-  final bool disable;
   const AuthButton({
     super.key,
     required this.text,
     required this.function,
-    required this.disable,
   });
 
   @override
@@ -26,8 +24,9 @@ class AuthButton extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 15,
+              color: primaryColor,
             ),
           ),
         ),

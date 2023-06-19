@@ -15,6 +15,8 @@ class InputTextfield extends StatefulWidget {
     required this.type,
   });
 
+  static void nothing(String text) {}
+
   @override
   State<InputTextfield> createState() => _InputTextfieldState();
 }
@@ -24,7 +26,8 @@ class _InputTextfieldState extends State<InputTextfield> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
+    return TextField(
+      onChanged: (value) => setState(() {}),
       controller: widget.controller,
       obscureText: widget.isPassword ? visible : false,
       cursorColor: primaryColor,

@@ -17,3 +17,7 @@ void pushReplacement(BuildContext context, Widget pushTo) {
     ),
   );
 }
+
+void pop(BuildContext context) {
+  Navigator.pop(context);
+}
