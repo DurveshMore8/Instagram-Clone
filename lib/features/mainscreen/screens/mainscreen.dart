@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/home_screen.dart';
+import 'package:new_instagram_clone/features/search/screens/search_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -83,7 +84,7 @@ class _MainScreenState extends State<MainScreen> {
         onPageChanged: pageChanged,
         children: const [
           HomeScreen(),
-          Text('Search'),
+          SearchScreen(),
           Text('Add Post'),
           Text('Reels'),
           Text('Profile'),
