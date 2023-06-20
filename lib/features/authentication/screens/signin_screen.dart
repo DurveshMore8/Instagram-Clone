@@ -99,7 +99,7 @@ class _SigninScreenState extends State<SigninScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'assets/images/instagram-text-icon.svg',
+                'assets/images/text_icon.svg',
                 height: 50,
                 colorFilter: ColorFilter.mode(
                   primaryColor,

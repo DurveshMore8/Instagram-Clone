@@ -15,8 +15,9 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: SvgPicture.asset(
-          'assets/images/instagram-text-icon.svg',
+          'assets/images/text_icon.svg',
           colorFilter: ColorFilter.mode(
             primaryColor,
             BlendMode.srcIn,

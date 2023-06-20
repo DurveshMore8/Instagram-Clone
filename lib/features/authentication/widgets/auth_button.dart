@@ -9,7 +9,7 @@ class AuthButton extends StatelessWidget {
     super.key,
     required this.text,
     required this.function,
-    this.disable = true,
+    required this.disable,
   });
 
   @override

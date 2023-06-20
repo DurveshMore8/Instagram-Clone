@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:new_instagram_clone/features/authentication/screens/moreinfo_screen.dart';
 import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
 import 'package:new_instagram_clone/features/authentication/services/signin_user.dart';
 import 'package:new_instagram_clone/features/authentication/services/signup_user.dart.dart';
@@ -50,6 +51,9 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void signUp() {
+    setState(() {
+      isEmpty = true;
+    });
     signUpUser(
       emailController.text,
       nameController.text,
@@ -58,14 +62,16 @@ class _SignupScreenState extends State<SignupScreen> {
       passwordController.text,
     ).then((res) {
       if (res == 'success') {
-        showAlertDialog(
+        signinUser(emailController.text, passwordController.text).then((res) {
+          showAlertDialog(
             context,
             'Account Created Successfully',
             'Add More Info',
             'Go to Account',
+            () => pushReplacement(context, const MoreinfoScreen()),
             () => pushReplacement(context, const MainScreen()),
-            () => signinUser(emailController.text, passwordController.text)
-                .then((res) => pushReplacement(context, const MainScreen())));
+          );
+        });
       } else {
         showAlertDialog(
           context,
@@ -76,6 +82,9 @@ class _SignupScreenState extends State<SignupScreen> {
           () => pushReplacement(context, const SigninScreen()),
         );
       }
+    });
+    setState(() {
+      isEmpty = false;
     });
   }
 
@@ -121,7 +130,7 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'assets/images/instagram-text-icon.svg',
+                'assets/images/text_icon.svg',
                 height: 50,
                 colorFilter: ColorFilter.mode(
                   primaryColor,

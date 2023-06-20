@@ -40,6 +40,7 @@ dependencies:
   firebase_core: ^2.14.0
   firebase_storage: ^11.2.3
   cloud_firestore: ^4.8.1
+  image_picker: ^0.8.9
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +66,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/instagram-text-icon.svg
+    - assets/images/text_icon.svg
     - assets/images/defaultProfile.jpg
     - assets/icons/home_filled.svg
     - assets/icons/home_outlined.svg
