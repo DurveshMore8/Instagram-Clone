@@ -6,6 +6,7 @@ class InputTextfield extends StatefulWidget {
   final TextEditingController controller;
   final bool isPassword;
   final TextInputType type;
+  final void Function(String)? onChanged;
 
   const InputTextfield({
     super.key,
@@ -13,6 +14,7 @@ class InputTextfield extends StatefulWidget {
     required this.controller,
     this.isPassword = false,
     required this.type,
+    this.onChanged,
   });
 
   static void nothing(String text) {}
@@ -27,7 +29,7 @@ class _InputTextfieldState extends State<InputTextfield> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      onChanged: (value) => setState(() {}),
+      onChanged: widget.onChanged,
       controller: widget.controller,
       obscureText: widget.isPassword ? visible : false,
       cursorColor: primaryColor,

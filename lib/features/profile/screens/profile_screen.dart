@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
+import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
+import 'package:new_instagram_clone/features/authentication/services/signout_user.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -166,7 +169,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   const SizedBox(width: 5),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      signoutUser().then((_) {
+                        pushReplacement(context, const SigninScreen());
+                      });
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * (41 / 100),
                       height: 35,

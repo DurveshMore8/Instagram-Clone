@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:new_instagram_clone/features/authentication/screens/signinscreen.dart';
+import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 void main() async {
