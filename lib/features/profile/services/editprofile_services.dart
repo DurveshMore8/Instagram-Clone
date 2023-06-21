@@ -12,7 +12,6 @@ class EditprofileServices {
   Future<String> updateDetails(
     Map<String, dynamic> details,
     Uint8List? profile,
-    String url,
     bool imageRemoved,
   ) async {
     String res = '';
