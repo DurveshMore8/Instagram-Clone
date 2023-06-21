@@ -40,6 +40,9 @@ dependencies:
   firebase_core: ^2.14.0
   firebase_storage: ^11.2.3
   cloud_firestore: ^4.8.1
+  image_picker: ^0.8.9
+  shared_preferences: ^2.1.2
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
@@ -65,14 +68,17 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/instagram-text-icon.svg
+    - assets/images/text_icon.svg
     - assets/images/defaultProfile.jpg
     - assets/icons/home_filled.svg
     - assets/icons/home_outlined.svg
     - assets/icons/search.svg
-    - assets/icons/add.svg
+    - assets/icons/add_post.svg
     - assets/icons/reels_outlined.svg
     - assets/icons/reels_filled.svg
+    - assets/icons/heart.svg
+    - assets/icons/messenger.svg
+    - assets/icons/menu.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

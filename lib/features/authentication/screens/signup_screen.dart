@@ -1,14 +1,14 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:new_instagram_clone/features/authentication/screens/signinscreen.dart';
-import 'package:new_instagram_clone/features/authentication/services/authservices.dart';
-import 'package:new_instagram_clone/features/authentication/widgets/authbutton.dart';
-import 'package:new_instagram_clone/features/authentication/widgets/inputtextfield.dart';
+import 'package:new_instagram_clone/features/authentication/screens/moreinfo_screen.dart';
+import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
+import 'package:new_instagram_clone/features/authentication/services/signin_user.dart';
+import 'package:new_instagram_clone/features/authentication/services/signup_user.dart.dart';
+import 'package:new_instagram_clone/features/authentication/widgets/auth_button.dart';
+import 'package:new_instagram_clone/features/authentication/widgets/input_textfield.dart';
 import 'package:new_instagram_clone/common/alert_dialog.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
-import 'package:new_instagram_clone/features/mainscreen/screens/mainscreen.dart';
+import 'package:new_instagram_clone/features/mainscreen/screens/main_screen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -24,6 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool isEmpty = true;
 
   @override
   void dispose() {
@@ -35,33 +36,59 @@ class _SignupScreenState extends State<SignupScreen> {
     passwordController.dispose();
   }
 
-  void signUp() async {
-    String res = await AuthServices().signUpUser(
+  void updateFieldStatus() {
+    setState(() {
+      if (emailController.text.isEmpty ||
+          nameController.text.isEmpty ||
+          usernameController.text.isEmpty ||
+          phoneController.text.isEmpty ||
+          passwordController.text.isEmpty) {
+        isEmpty = true;
+      } else {
+        isEmpty = false;
+      }
+    });
+  }
+
+  void signUp() {
+    setState(() {
+      isEmpty = true;
+    });
+    signUpUser(
       emailController.text,
       nameController.text,
       usernameController.text,
       phoneController.text,
       passwordController.text,
-    );
-    if (res == 'success') {
-      showAlertDialog(
-        context,
-        'Account Created Successfully',
-        'Get Started',
-        'Back to Log In',
-        () => pushReplacement(context, const MainScreen()),
-        () => pushReplacement(context, const SigninScreen()),
-      );
-    } else {
-      showAlertDialog(
-        context,
-        res,
-        'OK',
-        'Cancel',
-        () => pop(context),
-        () => pushReplacement(context, const SigninScreen()),
-      );
-    }
+    ).then((res) async {
+      if (res == 'success') {
+        signinUser(emailController.text, passwordController.text)
+            .then((result) {
+          if (result == 'success') {
+            showAlertDialog(
+              context,
+              'Account Created Successfully',
+              'Add More Info',
+              'Go to Account',
+              () => pushReplacement(context, const MoreinfoScreen()),
+              () => pushReplacement(context, const MainScreen()),
+            );
+          }
+        });
+      } else {
+        showAlertDialog(
+          context,
+          res,
+          'Try Again',
+          'Cancel',
+          () => pop(context),
+          () => pushReplacement(context, const SigninScreen()),
+        );
+      }
+    });
+    setState(() {
+      isEmpty = false;
+    });
   }
 
   @override
@@ -106,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset(
-                'assets/images/instagram-text-icon.svg',
+                'assets/images/text_icon.svg',
                 height: 50,
                 colorFilter: ColorFilter.mode(
                   primaryColor,
@@ -118,24 +145,28 @@ class _SignupScreenState extends State<SignupScreen> {
                 hintText: 'Email',
                 controller: emailController,
                 type: TextInputType.emailAddress,
+                onChanged: (_) => updateFieldStatus(),
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Name',
                 controller: nameController,
                 type: TextInputType.name,
+                onChanged: (_) => updateFieldStatus(),
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Username',
                 controller: usernameController,
                 type: TextInputType.text,
+                onChanged: (_) => updateFieldStatus(),
               ),
               const SizedBox(height: 15),
               InputTextfield(
                 hintText: 'Phone number',
                 controller: phoneController,
                 type: TextInputType.phone,
+                onChanged: (_) => updateFieldStatus(),
               ),
               const SizedBox(height: 15),
               InputTextfield(
@@ -143,11 +174,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 controller: passwordController,
                 isPassword: true,
                 type: TextInputType.text,
+                onChanged: (_) => updateFieldStatus(),
               ),
               const SizedBox(height: 25),
               AuthButton(
                 text: 'Sign up',
                 function: signUp,
+                disable: isEmpty,
               ),
             ],
           ),
