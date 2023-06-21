@@ -60,17 +60,20 @@ class _SignupScreenState extends State<SignupScreen> {
       usernameController.text,
       phoneController.text,
       passwordController.text,
-    ).then((res) {
+    ).then((res) async {
       if (res == 'success') {
-        signinUser(emailController.text, passwordController.text).then((res) {
-          showAlertDialog(
-            context,
-            'Account Created Successfully',
-            'Add More Info',
-            'Go to Account',
-            () => pushReplacement(context, const MoreinfoScreen()),
-            () => pushReplacement(context, const MainScreen()),
-          );
+        signinUser(emailController.text, passwordController.text)
+            .then((result) {
+          if (result == 'success') {
+            showAlertDialog(
+              context,
+              'Account Created Successfully',
+              'Add More Info',
+              'Go to Account',
+              () => pushReplacement(context, const MoreinfoScreen()),
+              () => pushReplacement(context, const MainScreen()),
+            );
+          }
         });
       } else {
         showAlertDialog(

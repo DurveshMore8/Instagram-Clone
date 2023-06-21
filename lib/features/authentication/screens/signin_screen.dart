@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/common/alert_dialog.dart';
@@ -38,21 +40,21 @@ class _SigninScreenState extends State<SigninScreen> {
     });
   }
 
-  void signIn() {
-    signinUser(idController.text, passwordController.text).then((res) {
-      if (res == 'success') {
-        pushReplacement(context, const MainScreen());
-      } else {
-        showAlertDialog(
-          context,
-          res,
-          'Try Again',
-          'Sign up',
-          () => pop(context),
-          () => pushReplacement(context, const SignupScreen()),
-        );
-      }
-    });
+  void signIn() async {
+    String res = await signinUser(idController.text, passwordController.text);
+
+    if (res == 'success') {
+      pushReplacement(context, const MainScreen());
+    } else {
+      showAlertDialog(
+        context,
+        res,
+        'Try Again',
+        'Sign up',
+        () => pop(context),
+        () => pushReplacement(context, const SignupScreen()),
+      );
+    }
   }
 
   @override

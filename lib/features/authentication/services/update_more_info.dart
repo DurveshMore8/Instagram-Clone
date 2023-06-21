@@ -12,7 +12,7 @@ Future<String> updateMoreInfo(Uint8List? profile, String bio) async {
   try {
     if (profile != null) {
       Reference ref =
-          storage.ref().child('profile').child(auth.currentUser!.uid);
+          storage.ref().child('profilePhotos').child(auth.currentUser!.uid);
 
       UploadTask uploadTask = ref.putData(profile);
 

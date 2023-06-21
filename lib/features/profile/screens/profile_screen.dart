@@ -3,7 +3,10 @@ import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
 import 'package:new_instagram_clone/features/authentication/services/signout_user.dart';
+import 'package:new_instagram_clone/models/user_model.dart';
+import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -13,6 +16,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late UserModel user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = Provider.of<UserProvider>(context, listen: false).getUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,33 +38,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           child: Column(
             children: [
-              const Row(
+              Row(
                 children: [
-                  Icon(
-                    Icons.lock_outline,
-                    size: 20,
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Icon(
+                      Icons.lock_outline,
+                      size: 20,
+                    ),
                   ),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'durvesh_8403',
-                      style: TextStyle(
+                      user.username,
+                      style: const TextStyle(
                         fontSize: 20,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: SvgIcons(
-                      path: 'assets/icons/add_post.svg',
-                      parameters: 23,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: const SvgIcons(
+                        path: 'assets/icons/add_post.svg',
+                        parameters: 23,
+                      ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: SvgIcons(
-                      path: 'assets/icons/menu.svg',
-                      parameters: 30,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: const SvgIcons(
+                        path: 'assets/icons/menu.svg',
+                        parameters: 30,
+                      ),
                     ),
                   ),
                 ],
@@ -65,7 +85,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     child: CircleAvatar(
                       radius: 50,
-                      child: Image.asset('assets/images/defaultProfile.jpg'),
+                      backgroundImage: user.profilePic.isEmpty
+                          ? const AssetImage('assets/images/defaultProfile.jpg')
+                              as ImageProvider
+                          : NetworkImage(user.profilePic),
                     ),
                   ),
                   const Expanded(
@@ -126,9 +149,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Container(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.only(left: 10),
-                child: const Text(
-                  'Durvesh More',
-                  style: TextStyle(
+                child: Text(
+                  user.name,
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
@@ -141,9 +164,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   top: 2,
                   bottom: 10,
                 ),
-                child: const Text(
-                  'Thriving for Perfection',
-                  style: TextStyle(
+                child: Text(
+                  user.bio,
+                  style: const TextStyle(
                     fontSize: 15,
                   ),
                 ),
