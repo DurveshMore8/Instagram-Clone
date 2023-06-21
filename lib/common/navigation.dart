@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
-void push(BuildContext context, Widget pushTo) {
+push(BuildContext context, Widget pushTo) {
   Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => pushTo,
+    ),
+  );
+}
+
+Future pushReturnValue(BuildContext context, Widget pushTo) async {
+  return await Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => pushTo,

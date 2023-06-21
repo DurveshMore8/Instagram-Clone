@@ -3,6 +3,7 @@ import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
 import 'package:new_instagram_clone/features/authentication/services/signout_user.dart';
+import 'package:new_instagram_clone/features/profile/screens/edit_profile_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
@@ -91,20 +92,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           : NetworkImage(user.profilePic),
                     ),
                   ),
-                  const Expanded(
+                  Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Column(
                           children: [
                             Text(
-                              '2',
-                              style: TextStyle(
+                              '${user.posts}',
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            Text(
+                            const Text(
                               'Posts',
                               style: TextStyle(fontSize: 15),
                             ),
@@ -113,13 +114,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           children: [
                             Text(
-                              '301',
-                              style: TextStyle(
+                              '${user.followers}',
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            Text(
+                            const Text(
                               'Followers',
                               style: TextStyle(fontSize: 15),
                             ),
@@ -128,13 +129,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Column(
                           children: [
                             Text(
-                              '231',
-                              style: TextStyle(
+                              '${user.following}',
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            Text(
+                            const Text(
                               'Following',
                               style: TextStyle(fontSize: 15),
                             ),
@@ -174,8 +175,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  InkWell(
-                    onTap: () {},
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return const EditProfileScreen();
+                        },
+                        useRootNavigator: true,
+                        isScrollControlled: true,
+                        enableDrag: false,
+                      ).then((value) {
+                        user = Provider.of<UserProvider>(context, listen: false)
+                            .getUser;
+                        setState(() {});
+                      });
+                    },
                     child: Container(
                       width: MediaQuery.of(context).size.width * (41 / 100),
                       height: 35,
