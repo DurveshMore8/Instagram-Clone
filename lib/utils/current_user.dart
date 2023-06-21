@@ -16,7 +16,11 @@ Future<UserModel> getCurrentUser() async {
     username: user['username'],
     phone: user['phone'],
     email: user['email'],
+    gender: user['gender'],
     profilePic: user['profilePic'],
     bio: user['bio'],
+    posts: user['posts'],
+    followers: user['followers'],
+    following: user['following'],
   );
 }
