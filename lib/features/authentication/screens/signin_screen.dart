@@ -41,6 +41,9 @@ class _SigninScreenState extends State<SigninScreen> {
   }
 
   void signIn() async {
+    setState(() {
+      isEmpty = true;
+    });
     String res = await signinUser(idController.text, passwordController.text);
 
     if (res == 'success') {
@@ -55,6 +58,9 @@ class _SigninScreenState extends State<SigninScreen> {
         () => pushReplacement(context, const SignupScreen()),
       );
     }
+    setState(() {
+      isEmpty = false;
+    });
   }
 
   @override

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/features/authentication/screens/moreinfo_screen.dart';
@@ -50,42 +52,41 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  void signUp() {
+  void signUp() async {
     setState(() {
       isEmpty = true;
     });
-    signUpUser(
+
+    String res = await signUpUser(
       emailController.text,
       nameController.text,
       usernameController.text,
       phoneController.text,
       passwordController.text,
-    ).then((res) async {
-      if (res == 'success') {
-        signinUser(emailController.text, passwordController.text)
-            .then((result) {
-          if (result == 'success') {
-            showAlertDialog(
-              context,
-              'Account Created Successfully',
-              'Add More Info',
-              'Go to Account',
-              () => pushReplacement(context, const MoreinfoScreen()),
-              () => pushReplacement(context, const MainScreen()),
-            );
-          }
-        });
-      } else {
-        showAlertDialog(
-          context,
-          res,
-          'Try Again',
-          'Cancel',
-          () => pop(context),
-          () => pushReplacement(context, const SigninScreen()),
-        );
-      }
-    });
+    );
+    if (res == 'success') {
+      signinUser(emailController.text, passwordController.text).then((result) {
+        if (result == 'success') {
+          showAlertDialog(
+            context,
+            'Account Created Successfully',
+            'Add More Info',
+            'Go to Account',
+            () => pushReplacement(context, const MoreinfoScreen()),
+            () => pushReplacement(context, const MainScreen()),
+          );
+        }
+      });
+    } else {
+      showAlertDialog(
+        context,
+        res,
+        'Try Again',
+        'Cancel',
+        () => pop(context),
+        () => pushReplacement(context, const SigninScreen()),
+      );
+    }
     setState(() {
       isEmpty = false;
     });

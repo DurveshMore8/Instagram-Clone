@@ -25,7 +25,7 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _pronounControlller = TextEditingController();
+  final TextEditingController _pronounController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _genderController = TextEditingController();
   Map<String, dynamic> valuesToUpdate = {};
@@ -51,15 +51,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nameController.text = user.name;
     _usernameController.text = user.username;
     _bioController.text = user.bio;
-    if (user.gender == 'm') {
-      _genderController.text = 'Male';
-    } else if (user.gender == 'f') {
-      _genderController.text = 'Female';
-    } else if (user.gender == 'c') {
-      _genderController.text = 'Custom';
-    } else {
-      _genderController.text = 'Prefer not to say';
-    }
+    _genderController.text = user.gender;
   }
 
   @override
@@ -67,7 +59,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     super.dispose();
     _nameController.dispose();
     _usernameController.dispose();
-    _pronounControlller.dispose();
+    _pronounController.dispose();
     _bioController.dispose();
     _genderController.dispose();
   }
@@ -153,7 +145,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       .updateDetails(
                     valuesToUpdate,
                     _profile,
-                    user.profilePic,
                     imageRemoved,
                   )
                       .then((res) {
@@ -248,11 +239,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       valuesToUpdate.addAll({'username': username});
                     }
                   }
-                  print(valuesToUpdate);
                 }),
               ),
               EditTextfield(
-                controller: _pronounControlller,
+                controller: _pronounController,
                 hintText: 'Pronoun',
                 readOnly: true,
                 function: () {},
@@ -293,7 +283,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 controller: _genderController,
                 hintText: 'Gender',
                 readOnly: true,
-                function: () => push(context, const GenderScreen()),
+                function: () => pushReturnValue(
+                  context,
+                  GenderScreen(gender: _genderController.text),
+                ).then((gender) {
+                  _genderController.text = gender;
+                  if (user.gender == gender) {
+                    if (valuesToUpdate.containsKey('gender')) {
+                      valuesToUpdate.remove('gender');
+                    }
+                  } else {
+                    if (valuesToUpdate.containsKey('gender')) {
+                      valuesToUpdate.update('gender', (value) => gender);
+                    } else {
+                      valuesToUpdate.addAll({'gender': gender});
+                    }
+                  }
+                }),
                 icon: Icons.arrow_forward_ios,
               ),
             ],

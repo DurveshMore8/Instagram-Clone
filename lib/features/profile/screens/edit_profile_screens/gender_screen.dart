@@ -5,14 +5,21 @@ import 'package:new_instagram_clone/features/profile/widgets/radio_button.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class GenderScreen extends StatefulWidget {
-  const GenderScreen({super.key});
+  final String gender;
+  const GenderScreen({super.key, required this.gender});
 
   @override
   State<GenderScreen> createState() => _GenderScreenState();
 }
 
 class _GenderScreenState extends State<GenderScreen> {
-  String gender = 'n';
+  late String gender;
+
+  @override
+  void initState() {
+    super.initState();
+    gender = widget.gender;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +52,7 @@ class _GenderScreenState extends State<GenderScreen> {
                 ),
               ),
               IconButton(
-                onPressed: () => pop(context),
+                onPressed: () => Navigator.pop(context, gender),
                 icon: Icon(
                   Icons.check,
                   color: blueColor,
@@ -62,10 +69,10 @@ class _GenderScreenState extends State<GenderScreen> {
           children: [
             const SizedBox(height: 20),
             const Note(text: 'This won\'t be part of you public profile'),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             RadioButton(
               text: 'Female',
-              value: 'f',
+              value: 'Female',
               group: gender,
               onChanged: (value) {
                 setState(() {
@@ -75,7 +82,7 @@ class _GenderScreenState extends State<GenderScreen> {
             ),
             RadioButton(
               text: 'Male',
-              value: 'm',
+              value: 'Male',
               group: gender,
               onChanged: (value) {
                 setState(() {
@@ -84,8 +91,8 @@ class _GenderScreenState extends State<GenderScreen> {
               },
             ),
             RadioButton(
-              text: 'Custom',
-              value: 'c',
+              text: 'Other',
+              value: 'Other',
               group: gender,
               onChanged: (value) {
                 setState(() {
@@ -95,7 +102,7 @@ class _GenderScreenState extends State<GenderScreen> {
             ),
             RadioButton(
               text: 'Prefer not to say',
-              value: 'n',
+              value: 'Prefer not to say',
               group: gender,
               onChanged: (value) {
                 setState(() {
