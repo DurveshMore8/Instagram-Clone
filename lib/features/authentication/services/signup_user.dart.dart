@@ -27,7 +27,7 @@ Future<String> signUpUser(
         username: username,
         phone: phone,
         email: email,
-        gender: 'n',
+        gender: 'Prefer not to say',
         profilePic: '',
         bio: '',
         posts: 0,

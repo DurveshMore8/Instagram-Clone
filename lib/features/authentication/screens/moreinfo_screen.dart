@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ class MoreinfoScreen extends StatefulWidget {
 class _MoreinfoScreenState extends State<MoreinfoScreen> {
   final TextEditingController _bioController = TextEditingController();
   Uint8List? _profile;
+  bool isEmpty = true;
   List<IconData> icons = [
     Icons.camera_alt_outlined,
     Icons.file_upload_outlined,
@@ -39,20 +42,27 @@ class _MoreinfoScreenState extends State<MoreinfoScreen> {
     _bioController.dispose();
   }
 
-  void updateInfo() {
-    updateMoreInfo(_profile, _bioController.text).then((res) {
-      if (res == 'success') {
-        pushReplacement(context, const MainScreen());
-      } else {
-        showAlertDialog(
-          context,
-          res,
-          'Try Again',
-          'Go To Account',
-          () => pop(context),
-          () => pushReplacement(context, const MainScreen()),
-        );
-      }
+  void updateInfo() async {
+    setState(() {
+      isEmpty = true;
+    });
+
+    String res = await updateMoreInfo(_profile, _bioController.text);
+    if (res == 'success') {
+      pushReplacement(context, const MainScreen());
+    } else {
+      showAlertDialog(
+        context,
+        res,
+        'Try Again',
+        'Go To Account',
+        () => pop(context),
+        () => pushReplacement(context, const MainScreen()),
+      );
+    }
+
+    setState(() {
+      isEmpty = false;
     });
   }
 
@@ -126,12 +136,21 @@ class _MoreinfoScreenState extends State<MoreinfoScreen> {
                 BioTextfield(
                   controller: _bioController,
                   hintText: 'Bio',
+                  onChanged: (value) => {
+                    setState(() {
+                      if (value.isEmpty) {
+                        isEmpty = true;
+                      } else {
+                        isEmpty = false;
+                      }
+                    })
+                  },
                 ),
                 const SizedBox(height: 50),
                 AuthButton(
                   text: 'Proceed',
                   function: updateInfo,
-                  disable: false,
+                  disable: isEmpty,
                 ),
               ],
             ),
