@@ -6,12 +6,20 @@ class Search extends StatefulWidget {
   final String hintText;
   final VoidCallback? function;
   final bool readOnly;
+  final bool isSearchEmpty;
+  final FocusNode? focusNode;
+  final void Function(String)? onChanged;
+  final VoidCallback? clearField;
   const Search({
     super.key,
     required this.controller,
     required this.hintText,
     this.function,
     required this.readOnly,
+    required this.isSearchEmpty,
+    this.focusNode,
+    this.onChanged,
+    this.clearField,
   });
 
   @override
@@ -19,8 +27,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  bool isSearchEmpty = true;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,15 +34,8 @@ class _SearchState extends State<Search> {
       padding: const EdgeInsets.all(3),
       child: TextField(
         onTap: widget.function,
-        onChanged: (value) {
-          setState(() {
-            if (value == '') {
-              isSearchEmpty = true;
-            } else {
-              isSearchEmpty = false;
-            }
-          });
-        },
+        focusNode: widget.focusNode,
+        onChanged: widget.onChanged,
         controller: widget.controller,
         readOnly: widget.readOnly,
         decoration: InputDecoration(
@@ -52,15 +51,10 @@ class _SearchState extends State<Search> {
           prefixIcon: const Icon(Icons.search),
           prefixIconColor: primaryColor,
           contentPadding: EdgeInsets.zero,
-          suffixIcon: isSearchEmpty
+          suffixIcon: widget.isSearchEmpty
               ? null
               : IconButton(
-                  onPressed: () {
-                    setState(() {
-                      isSearchEmpty = true;
-                      widget.controller.clear();
-                    });
-                  },
+                  onPressed: widget.clearField,
                   icon: const Icon(Icons.close),
                 ),
           suffixIconColor: primaryColor,
