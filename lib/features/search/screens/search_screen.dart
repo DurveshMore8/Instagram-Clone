@@ -27,6 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
         title: Search(
           controller: _searchController,
           hintText: 'Search',
+          isSearchEmpty: true,
           function: () => push(context, const SearchingScreen()),
           readOnly: true,
         ),
