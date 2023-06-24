@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
@@ -17,6 +18,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   late UserModel user;
 
   @override
@@ -113,13 +115,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Column(
                           children: [
-                            Text(
-                              '${user.followers}',
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            StreamBuilder(
+                                stream: _firestore
+                                    .collection('users')
+                                    .doc(user.uid)
+                                    .collection('followers')
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      '${snapshot.data!.docs.length}',
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  }
+                                }),
                             const Text(
                               'Followers',
                               style: TextStyle(fontSize: 15),
@@ -128,13 +149,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Column(
                           children: [
-                            Text(
-                              '${user.following}',
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            StreamBuilder(
+                                stream: _firestore
+                                    .collection('users')
+                                    .doc(user.uid)
+                                    .collection('following')
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  } else {
+                                    return Text(
+                                      '${snapshot.data!.docs.length}',
+                                      style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  }
+                                }),
                             const Text(
                               'Following',
                               style: TextStyle(fontSize: 15),

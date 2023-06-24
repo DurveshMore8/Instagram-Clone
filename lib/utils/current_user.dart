@@ -20,7 +20,5 @@ Future<UserModel> getCurrentUser() async {
     profilePic: user['profilePic'],
     bio: user['bio'],
     posts: user['posts'],
-    followers: user['followers'],
-    following: user['following'],
   );
 }
