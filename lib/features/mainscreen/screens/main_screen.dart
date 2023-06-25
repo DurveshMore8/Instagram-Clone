@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/home_screen.dart';
-import 'package:new_instagram_clone/features/post/screens/upload_post.dart';
+import 'package:new_instagram_clone/features/post/screens/upload_post_screen.dart';
 import 'package:new_instagram_clone/features/profile/screens/profile_screen.dart';
 import 'package:new_instagram_clone/features/search/screens/search_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
@@ -63,7 +63,7 @@ class _MainScreenState extends State<MainScreen> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const UploadPost(),
+            const UploadPostScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SlideTransition(
             position: Tween<Offset>(
