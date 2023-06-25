@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
+import 'package:new_instagram_clone/features/home/widgets/post_card.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -39,6 +40,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+      body: ListView.builder(
+        itemCount: 1,
+        itemBuilder: (context, index) {
+          return const PostCard();
+        },
       ),
     );
   }

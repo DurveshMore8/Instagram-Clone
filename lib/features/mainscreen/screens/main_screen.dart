@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/home_screen.dart';
+import 'package:new_instagram_clone/features/post/screens/upload_post.dart';
 import 'package:new_instagram_clone/features/profile/screens/profile_screen.dart';
 import 'package:new_instagram_clone/features/search/screens/search_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
@@ -44,13 +45,37 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void jumpToPage(int page) {
-    _pageController.jumpToPage(page);
+    if (page == 2) {
+      goToUploadPost();
+    } else {
+      _pageController.jumpToPage(page);
+    }
   }
 
   void pageChanged(int page) {
     setState(() {
       _page = page;
     });
+  }
+
+  void goToUploadPost() {
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const UploadPost(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1.0, 0.0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 300),
+      ),
+    );
   }
 
   @override
@@ -113,7 +138,7 @@ class _MainScreenState extends State<MainScreen> {
               children: const [
                 HomeScreen(),
                 SearchScreen(),
-                Text('Add Post'),
+                SizedBox(),
                 Text('Reels'),
                 ProfileScreen(),
               ],

@@ -5,13 +5,13 @@ class FollowModel {
   final String profilePic;
   final DateTime date;
 
-  FollowModel(
-    this.uid,
-    this.name,
-    this.username,
-    this.profilePic,
-    this.date,
-  );
+  FollowModel({
+    required this.uid,
+    required this.name,
+    required this.username,
+    required this.profilePic,
+    required this.date,
+  });
 
   Map<String, dynamic> toJson() => {
         'uid': uid,

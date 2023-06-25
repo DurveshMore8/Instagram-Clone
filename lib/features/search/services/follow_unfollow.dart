@@ -16,19 +16,19 @@ class FollowUnfollow {
 
     try {
       FollowModel following = FollowModel(
-        uid,
-        name,
-        username,
-        profilePic,
-        DateTime.now(),
+        uid: uid,
+        name: name,
+        username: username,
+        profilePic: profilePic,
+        date: DateTime.now(),
       );
 
       FollowModel follower = FollowModel(
-        currentUser.uid,
-        currentUser.name,
-        currentUser.username,
-        currentUser.profilePic,
-        DateTime.now(),
+        uid: currentUser.uid,
+        name: currentUser.name,
+        username: currentUser.username,
+        profilePic: currentUser.profilePic,
+        date: DateTime.now(),
       );
 
       await _firestore
