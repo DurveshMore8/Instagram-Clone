@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
+import 'package:new_instagram_clone/features/home/widgets/post_card.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -40,6 +42,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.size,
+                itemBuilder: (context, index) {
+                  return PostCard(
+                      snap: snapshot.data!.docs.elementAt(index).data());
+                },
+              );
+            }
+          }),
     );
   }
 }

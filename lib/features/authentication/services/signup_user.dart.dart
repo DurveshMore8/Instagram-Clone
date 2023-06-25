@@ -22,17 +22,16 @@ Future<String> signUpUser(
     );
 
     UserModel user = UserModel(
-        uid: credential.user!.uid,
-        name: name,
-        username: username,
-        phone: phone,
-        email: email,
-        gender: 'Prefer not to say',
-        profilePic: '',
-        bio: '',
-        posts: 0,
-        followers: 0,
-        following: 0);
+      uid: credential.user!.uid,
+      name: name,
+      username: username,
+      phone: phone,
+      email: email,
+      gender: 'Prefer not to say',
+      profilePic: '',
+      bio: '',
+      posts: 0,
+    );
 
     await firebaseFirestore
         .collection('users')

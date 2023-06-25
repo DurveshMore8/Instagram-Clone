@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
+import 'package:new_instagram_clone/features/search/screens/view_profile_screen.dart';
 import 'package:new_instagram_clone/features/search/services/searching.dart';
 import 'package:new_instagram_clone/features/search/widgets/result_tile.dart';
 import 'package:new_instagram_clone/features/search/widgets/search_bar.dart';
@@ -106,6 +107,10 @@ class _SearchingScreenState extends State<SearchingScreen> {
             profilePic: users[index]['profilePic'],
             username: users[index]['username'],
             name: users[index]['name'],
+            function: () => push(
+              context,
+              ViewProfileScreen(username: users[index]['username']),
+            ),
           );
         },
       ),
