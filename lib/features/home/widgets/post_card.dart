@@ -3,7 +3,8 @@ import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 
 class PostCard extends StatelessWidget {
-  const PostCard({super.key});
+  final Map<String, dynamic> snap;
+  const PostCard({super.key, required this.snap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +18,23 @@ class PostCard extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 15,
-                  backgroundImage:
-                      AssetImage('assets/images/defaultProfile.jpg'),
-                ),
+                    radius: 15,
+                    backgroundImage: snap['profilePic'].isEmpty
+                        ? const AssetImage('assets/images/defaultProfile.jpg')
+                            as ImageProvider
+                        : NetworkImage(snap['profilePic'])),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    'durvesh_8403',
-                    style: TextStyle(
+                    '${snap['username']}',
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
                 GestureDetector(
-                  child: Icon(Icons.more_vert),
+                  child: const Icon(Icons.more_vert),
                 ),
               ],
             ),
@@ -41,7 +43,7 @@ class PostCard extends StatelessWidget {
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.symmetric(vertical: 10),
             child: Image.network(
-              'https://cdn.pixabay.com/photo/2015/06/19/21/24/avenue-815297_640.jpg',
+              '${snap['url']}',
               fit: BoxFit.fill,
             ),
           ),
@@ -49,19 +51,19 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: Row(
                     children: [
                       SvgIcons(
                         path: 'assets/icons/heart_outlined.svg',
                         parameters: 30,
                       ),
-                      const SizedBox(width: 20),
+                      SizedBox(width: 20),
                       SvgIcons(
                         path: 'assets/icons/comments.svg',
                         parameters: 22,
                       ),
-                      const SizedBox(width: 20),
+                      SizedBox(width: 20),
                       SvgIcons(
                         path: 'assets/icons/share.svg',
                         parameters: 22,
@@ -70,7 +72,7 @@ class PostCard extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  child: Icon(
+                  child: const Icon(
                     Icons.bookmark_border,
                     size: 30,
                   ),
@@ -112,13 +114,13 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             child: RichText(
               text: TextSpan(
-                text: 'durvesh_8403',
-                style: TextStyle(
+                text: '${snap['username']}',
+                style: const TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
                 children: [
                   TextSpan(
-                    text: ' Hey There I am using Whats app.',
+                    text: ' ${snap['description']}',
                   ),
                 ],
               ),

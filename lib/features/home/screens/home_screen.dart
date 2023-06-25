@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
@@ -41,12 +42,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (context, index) {
-          return const PostCard();
-        },
-      ),
+      body: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.size,
+                itemBuilder: (context, index) {
+                  return PostCard(
+                      snap: snapshot.data!.docs.elementAt(index).data());
+                },
+              );
+            }
+          }),
     );
   }
 }
