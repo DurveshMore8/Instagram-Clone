@@ -7,7 +7,6 @@ class UserModel {
   final String gender;
   final String profilePic;
   final String bio;
-  final int posts;
 
   UserModel({
     required this.uid,
@@ -18,7 +17,6 @@ class UserModel {
     required this.gender,
     required this.profilePic,
     required this.bio,
-    required this.posts,
   });
 
   Map<String, dynamic> toJson() => {
@@ -30,6 +28,5 @@ class UserModel {
         'gender': gender,
         'profilePic': profilePic,
         'bio': bio,
-        'posts': posts,
       };
 }

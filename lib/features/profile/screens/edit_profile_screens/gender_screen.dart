@@ -53,7 +53,7 @@ class _GenderScreenState extends State<GenderScreen> {
               ),
               IconButton(
                 onPressed: () => Navigator.pop(context, gender),
-                icon: Icon(
+                icon: const Icon(
                   Icons.check,
                   color: blueColor,
                   size: 35,

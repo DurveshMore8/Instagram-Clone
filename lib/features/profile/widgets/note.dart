@@ -11,7 +11,7 @@ class Note extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         text,
-        style: TextStyle(
+        style: const TextStyle(
           color: greyColor,
           fontSize: 12,
         ),

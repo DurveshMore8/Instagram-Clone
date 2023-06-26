@@ -68,7 +68,7 @@ class _SigninScreenState extends State<SigninScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(
               color: primaryColor,
@@ -88,7 +88,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 onTap: () {
                   pushReplacement(context, const SignupScreen());
                 },
-                child: Text(
+                child: const Text(
                   'Sign up.',
                   style: TextStyle(
                     color: primaryColor,
@@ -109,7 +109,7 @@ class _SigninScreenState extends State<SigninScreen> {
               SvgPicture.asset(
                 'assets/images/text_icon.svg',
                 height: 50,
-                colorFilter: ColorFilter.mode(
+                colorFilter: const ColorFilter.mode(
                   primaryColor,
                   BlendMode.srcIn,
                 ),
@@ -147,7 +147,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     ),
                     GestureDetector(
                       onTap: () {},
-                      child: Text(
+                      child: const Text(
                         'Get help logging in.',
                         style: TextStyle(
                           color: primaryColor,

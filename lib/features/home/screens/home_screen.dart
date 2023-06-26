@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
         title: SvgPicture.asset(
           'assets/images/text_icon.svg',
-          colorFilter: ColorFilter.mode(
+          colorFilter: const ColorFilter.mode(
             primaryColor,
             BlendMode.srcIn,
           ),
@@ -43,18 +43,20 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('posts').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('posts')
+              .orderBy('published', descending: true)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return Container();
             } else {
               return ListView.builder(
                 itemCount: snapshot.data!.size,
                 itemBuilder: (context, index) {
                   return PostCard(
-                      snap: snapshot.data!.docs.elementAt(index).data());
+                    snap: snapshot.data!.docs.elementAt(index).data(),
+                  );
                 },
               );
             }

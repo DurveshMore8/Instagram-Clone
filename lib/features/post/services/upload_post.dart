@@ -35,7 +35,7 @@ class UploadPost {
         url: downloadUrl,
       );
 
-      await _firestore.collection('posts').doc(user.uid).set(post.toJson());
+      await _firestore.collection('posts').doc(postId).set(post.toJson());
 
       res = 'success';
     } catch (e) {

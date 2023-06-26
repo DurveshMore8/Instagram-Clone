@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
       title: 'New Instagram Clone',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           backgroundColor: backgroundColor,
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
           backgroundColor: backgroundColor,
           selectedIconTheme: IconThemeData(
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.userChanges(),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator(
+            return const CircularProgressIndicator(
               color: primaryColor,
             );
           }

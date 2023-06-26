@@ -67,7 +67,7 @@ class _UsernameScreenState extends State<UsernameScreen> {
                   context,
                   _usernameController.text,
                 ),
-                icon: Icon(
+                icon: const Icon(
                   Icons.check,
                   color: blueColor,
                   size: 35,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-Color backgroundColor = Colors.black;
-Color primaryColor = Colors.white;
+const Color backgroundColor = Colors.black;
+const Color primaryColor = Colors.white;
+const Color greyColor = Colors.grey;
+const Color blueColor = Colors.blue;
+const Color redColor = Colors.red;
+
 Color textfieldColor = Colors.grey.shade900;
-Color greyColor = Colors.grey;
-Color blueColor = Colors.blue;
-Color redColor = Colors.red;
 Color bottomSheetColor = Colors.black.withOpacity(0.65);

@@ -1,12 +1,15 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/pick_image.dart';
 import 'package:new_instagram_clone/features/authentication/widgets/options_slider.dart';
 import 'package:new_instagram_clone/features/mainscreen/screens/main_screen.dart';
 import 'package:new_instagram_clone/features/post/services/upload_post.dart';
+import 'package:new_instagram_clone/models/user_model.dart';
+import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 class UploadPostScreen extends StatefulWidget {
   const UploadPostScreen({super.key});
@@ -17,16 +20,16 @@ class UploadPostScreen extends StatefulWidget {
 
 class _UploadPostScreenState extends State<UploadPostScreen> {
   Uint8List _profile = Uint8List.fromList([]);
-  final TextEditingController _bioController = TextEditingController();
+  final TextEditingController _captionController = TextEditingController();
 
   @override
   void dispose() {
-    _bioController.dispose();
+    _captionController.dispose();
     super.dispose();
   }
 
   void uploadPost() {
-    UploadPost().uploadPost(_profile, _bioController.text).then((res) {
+    UploadPost().uploadPost(_profile, _captionController.text).then((res) {
       if (res == 'success') {
         pushReplacement(
           context,
@@ -38,6 +41,8 @@ class _UploadPostScreenState extends State<UploadPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    UserModel user = Provider.of<UserProvider>(context, listen: false).getUser;
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -48,11 +53,33 @@ class _UploadPostScreenState extends State<UploadPostScreen> {
             size: 40,
           ),
         ),
-        title: const Text(
-          'New post',
-          style: TextStyle(
-            fontSize: 20,
-          ),
+        title: Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'New post',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            _profile.isEmpty
+                ? Container()
+                : Container(
+                    alignment: Alignment.center,
+                    child: InkWell(
+                      onTap: uploadPost,
+                      child: const Text(
+                        'Share',
+                        style: TextStyle(
+                          color: blueColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+          ],
         ),
       ),
       body: _profile.isEmpty
@@ -99,46 +126,67 @@ class _UploadPostScreenState extends State<UploadPostScreen> {
                 child: const Text('Upload Post'),
               ),
             )
-          : SingleChildScrollView(
-              child: Container(
-                padding: const EdgeInsets.only(top: 30),
-                child: Column(
-                  children: [
-                    Image.memory(
-                      _profile,
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                    const SizedBox(height: 100),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        controller: _bioController,
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                        decoration: const InputDecoration(
-                          label: Text('Bio'),
+          : Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 20,
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: user.profilePic.isEmpty
+                        ? const AssetImage('assets/images/defaultProfile')
+                            as ImageProvider
+                        : NetworkImage(user.profilePic),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: TextField(
+                      controller: _captionController,
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      decoration: const InputDecoration(
+                        hintText: 'Write a caption...',
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide.none,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 50),
-                    InkWell(
-                      onTap: uploadPost,
-                      child: Container(
-                        color: blueColor,
-                        width: 200,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                        ),
-                        alignment: Alignment.center,
-                        child: const Center(
-                          child: Text('Upload Post'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: Image.memory(_profile),
+                  )
+                ],
               ),
             ),
+      // SingleChildScrollView(
+      //     child: Container(
+      //       padding: const EdgeInsets.only(top: 30),
+      //       child: Column(
+      //         children: [
+      //           Image.memory(
+      //             _profile,
+      //             width: MediaQuery.of(context).size.width,
+      //           ),
+      //           const SizedBox(height: 100),
+      //           Container(
+      //             padding: const EdgeInsets.symmetric(horizontal: 20),
+      //             child: TextField(
+      //               controller: _captionController,
+      //               maxLines: null,
+      //               keyboardType: TextInputType.multiline,
+      //               decoration: const InputDecoration(
+      //                 label: Text('Caption'),
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ),
     );
   }
 }

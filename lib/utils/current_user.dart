@@ -19,6 +19,5 @@ Future<UserModel> getCurrentUser() async {
     gender: user['gender'],
     profilePic: user['profilePic'],
     bio: user['bio'],
-    posts: user['posts'],
   );
 }

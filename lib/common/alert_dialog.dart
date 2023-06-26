@@ -37,7 +37,7 @@ showAlertDialog(
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 color: primaryColor,
                 thickness: 0.1,
                 height: 0,
@@ -52,7 +52,7 @@ showAlertDialog(
                   ),
                 ),
               ),
-              Divider(
+              const Divider(
                 color: primaryColor,
                 thickness: 0.1,
                 height: 0,
@@ -65,7 +65,7 @@ showAlertDialog(
                   child: Center(
                     child: Text(
                       option2,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: redColor,
                       ),
                     ),

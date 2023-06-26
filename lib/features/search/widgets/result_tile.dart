@@ -52,7 +52,7 @@ class ResultTile extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       name,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: greyColor,
                         fontSize: 15,
                       ),
