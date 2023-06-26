@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
+import 'package:new_instagram_clone/features/home/services/comment_service.dart';
+import 'package:new_instagram_clone/features/home/widgets/comment_card.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
@@ -22,16 +24,15 @@ class CommentScreen extends StatefulWidget {
 class _CommentScreenState extends State<CommentScreen> {
   final TextEditingController _commentController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  late UserModel user;
   bool isEmpty = true;
   String period = '';
 
   @override
   void initState() {
     super.initState();
-    DateTime published = DateTime.fromMillisecondsSinceEpoch(
-        widget.post['published'].seconds * 1000);
-    int difference = DateTime.now().difference(published).inSeconds;
-    period = getShortPeriod(difference);
+    user = Provider.of<UserProvider>(context, listen: false).getUser;
+    period = getShortPeriod(widget.post['published']);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
@@ -44,20 +45,24 @@ class _CommentScreenState extends State<CommentScreen> {
     super.dispose();
   }
 
-  void updateStatus(String value) {
-    setState(() {
-      if (value.isEmpty) {
-        isEmpty = true;
-      } else {
-        isEmpty = false;
-      }
-    });
+  void postComment() {
+    if (_commentController.text.isNotEmpty) {
+      CommentService()
+          .comment(
+        user,
+        _commentController.text,
+        widget.post['postId'],
+      )
+          .then((res) {
+        if (res == 'success') {
+          _commentController.clear();
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final UserModel user = Provider.of<UserProvider>(context).getUser;
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -81,10 +86,7 @@ class _CommentScreenState extends State<CommentScreen> {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 20,
-                  ),
+                  padding: const EdgeInsets.all(15),
                   child: Row(
                     children: [
                       CircleAvatar(
@@ -105,7 +107,7 @@ class _CommentScreenState extends State<CommentScreen> {
                                 Text(
                                   '${widget.post['username']}',
                                   style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w400,
                                   ),
                                 ),
                                 const SizedBox(width: 5),
@@ -131,16 +133,30 @@ class _CommentScreenState extends State<CommentScreen> {
                 Divider(
                   color: textfieldColor,
                 ),
-                StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('posts')
-                      .doc(widget.post['postId'])
-                      .collection('comments')
-                      .orderBy('commentedOn')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    return Container();
-                  },
+                Expanded(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('posts')
+                        .doc(widget.post['postId'])
+                        .collection('comments')
+                        .orderBy('commentedOn')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Container();
+                      } else {
+                        return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            return CommentCard(
+                                comment: snapshot.data!.docs
+                                    .elementAt(index)
+                                    .data());
+                          },
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
@@ -148,7 +164,7 @@ class _CommentScreenState extends State<CommentScreen> {
           Container(
             color: textfieldColor,
             padding: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: 15,
               vertical: 2,
             ),
             child: Row(
@@ -162,7 +178,6 @@ class _CommentScreenState extends State<CommentScreen> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
-                    onChanged: updateStatus,
                     focusNode: _focusNode,
                     controller: _commentController,
                     decoration: InputDecoration(
@@ -174,11 +189,11 @@ class _CommentScreenState extends State<CommentScreen> {
                   ),
                 ),
                 InkWell(
-                  onTap: () {},
-                  child: Text(
+                  onTap: postComment,
+                  child: const Text(
                     'Post',
                     style: TextStyle(
-                      color: isEmpty ? blueColor.withOpacity(0.3) : blueColor,
+                      color: blueColor,
                       fontWeight: FontWeight.w400,
                     ),
                   ),

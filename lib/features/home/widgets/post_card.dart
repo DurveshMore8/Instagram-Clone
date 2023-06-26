@@ -197,10 +197,16 @@ class PostCard extends StatelessWidget {
                       snapshot.data!.docs.isEmpty) {
                     return Container();
                   } else {
-                    return Text(
-                      'View all ${snapshot.data!.docs.length} comments',
-                      style: const TextStyle(
-                        color: greyColor,
+                    return InkWell(
+                      onTap: () => push(
+                        context,
+                        CommentScreen(post: snap),
+                      ),
+                      child: Text(
+                        'View all ${snapshot.data!.docs.length} comments',
+                        style: const TextStyle(
+                          color: greyColor,
+                        ),
                       ),
                     );
                   }

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 String getPeriod(int difference) {
   if (difference < 60) {
     if (difference == 1) {
@@ -32,7 +34,11 @@ String getPeriod(int difference) {
   }
 }
 
-String getShortPeriod(int difference) {
+String getShortPeriod(Timestamp timeStamp) {
+  DateTime published =
+      DateTime.fromMillisecondsSinceEpoch(timeStamp.seconds * 1000);
+  int difference = DateTime.now().difference(published).inSeconds;
+
   if (difference < 60) {
     return '${difference}s';
   } else if (difference < 3600) {
