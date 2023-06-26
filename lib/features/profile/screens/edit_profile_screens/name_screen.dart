@@ -67,7 +67,7 @@ class _NameScreenState extends State<NameScreen> {
                   context,
                   _nameController.text,
                 ),
-                icon: Icon(
+                icon: const Icon(
                   Icons.check,
                   color: blueColor,
                   size: 35,

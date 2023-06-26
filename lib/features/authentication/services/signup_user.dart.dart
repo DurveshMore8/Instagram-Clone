@@ -30,7 +30,6 @@ Future<String> signUpUser(
       gender: 'Prefer not to say',
       profilePic: '',
       bio: '',
-      posts: 0,
     );
 
     await firebaseFirestore

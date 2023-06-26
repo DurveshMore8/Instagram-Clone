@@ -155,7 +155,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     }
                   });
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.check,
                   color: blueColor,
                   size: 35,
@@ -189,7 +189,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               : NetworkImage(user.profilePic),
                     ),
                     const SizedBox(height: 15),
-                    Text(
+                    const Text(
                       'Edit picture or avatar',
                       style: TextStyle(color: blueColor),
                     ),

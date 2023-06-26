@@ -14,7 +14,7 @@ class BioTextfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UnderlineInputBorder border = UnderlineInputBorder(
+    const UnderlineInputBorder border = UnderlineInputBorder(
       borderSide: BorderSide(
         color: primaryColor,
       ),
@@ -24,7 +24,7 @@ class BioTextfield extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         labelText: hintText,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           color: greyColor,
         ),
         enabledBorder: border,

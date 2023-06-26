@@ -100,13 +100,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         Column(
                           children: [
-                            Text(
-                              '${user.posts}',
-                              style: const TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                            StreamBuilder(
+                                stream: _firestore
+                                    .collection('posts')
+                                    .where('uid', isEqualTo: user.uid)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Text(
+                                      '0',
+                                      style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    );
+                                  }
+                                  return Text(
+                                    '${snapshot.data!.docs.length}',
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  );
+                                }),
                             const Text(
                               'Posts',
                               style: TextStyle(fontSize: 15),

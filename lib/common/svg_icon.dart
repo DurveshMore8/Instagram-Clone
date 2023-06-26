@@ -5,10 +5,12 @@ import 'package:new_instagram_clone/utils/colors.dart';
 class SvgIcons extends StatelessWidget {
   final String path;
   final double parameters;
+  final Color color;
   const SvgIcons({
     super.key,
     required this.path,
     required this.parameters,
+    this.color = primaryColor,
   });
 
   @override
@@ -18,7 +20,7 @@ class SvgIcons extends StatelessWidget {
       width: parameters,
       height: parameters,
       colorFilter: ColorFilter.mode(
-        primaryColor,
+        color,
         BlendMode.srcIn,
       ),
     );

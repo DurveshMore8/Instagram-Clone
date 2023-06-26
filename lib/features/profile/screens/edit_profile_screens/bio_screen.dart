@@ -66,7 +66,7 @@ class _BioScreenState extends State<BioScreen> {
                   context,
                   _bioController.text,
                 ),
-                icon: Icon(
+                icon: const Icon(
                   Icons.check,
                   color: blueColor,
                   size: 35,

@@ -20,7 +20,7 @@ class EditTextfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UnderlineInputBorder border = UnderlineInputBorder(
+    const UnderlineInputBorder border = UnderlineInputBorder(
       borderSide: BorderSide(
         color: primaryColor,
       ),
@@ -32,7 +32,7 @@ class EditTextfield extends StatelessWidget {
       focusNode: focusNode,
       decoration: InputDecoration(
         labelText: hintText,
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           color: greyColor,
         ),
         enabledBorder: border,
