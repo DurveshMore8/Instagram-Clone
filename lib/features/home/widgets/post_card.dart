@@ -175,6 +175,10 @@ class PostCard extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: ' ${snap['description']}',
+                    style: const TextStyle(
+                      height: 1.5,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
