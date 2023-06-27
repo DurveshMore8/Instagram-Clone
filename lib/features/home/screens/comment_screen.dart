@@ -149,9 +149,9 @@ class _CommentScreenState extends State<CommentScreen> {
                           itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
                             return CommentCard(
-                                comment: snapshot.data!.docs
-                                    .elementAt(index)
-                                    .data());
+                              comment:
+                                  snapshot.data!.docs.elementAt(index).data(),
+                            );
                           },
                         );
                       }

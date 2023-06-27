@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/comment_screen.dart';
+import 'package:new_instagram_clone/features/home/screens/likes_screen.dart';
 import 'package:new_instagram_clone/features/home/services/like_services.dart';
+import 'package:new_instagram_clone/features/search/screens/view_profile_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
@@ -168,6 +171,16 @@ class PostCard extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.w500,
                             ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                push(
+                                  context,
+                                  ViewProfileScreen(
+                                    username: snapshot.data!.docs.first
+                                        .data()['username'],
+                                  ),
+                                );
+                              },
                           ),
                           data == 1
                               ? const TextSpan()
@@ -182,6 +195,15 @@ class PostCard extends StatelessWidget {
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                   ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => push(
+                                          context,
+                                          LikesScreen(
+                                            likes: snapshot.data!.docs
+                                                .map((e) => e.data())
+                                                .toList(),
+                                          ),
+                                        ),
                                 ),
                         ],
                       ),
