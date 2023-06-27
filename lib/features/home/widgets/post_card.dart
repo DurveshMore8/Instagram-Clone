@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/comment_screen.dart';
+import 'package:new_instagram_clone/features/home/screens/likes_screen.dart';
 import 'package:new_instagram_clone/features/home/services/like_services.dart';
+import 'package:new_instagram_clone/features/search/screens/view_profile_screen.dart';
+import 'package:new_instagram_clone/models/user_model.dart';
+import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
 import 'package:new_instagram_clone/utils/get_period.dart';
+import 'package:provider/provider.dart';
 
 class PostCard extends StatelessWidget {
   final Map<String, dynamic> snap;
@@ -18,6 +24,7 @@ class PostCard extends StatelessWidget {
         DateTime.fromMillisecondsSinceEpoch(snap['published'].seconds * 1000);
     int difference = DateTime.now().difference(published).inSeconds;
     String period = getPeriod(difference);
+    UserModel user = Provider.of<UserProvider>(context, listen: false).getUser;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -70,6 +77,7 @@ class PostCard extends StatelessWidget {
                             .collection('posts')
                             .doc(snap['postId'])
                             .collection('likes')
+                            .where('uid', isEqualTo: user.uid)
                             .snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
@@ -140,28 +148,68 @@ class PostCard extends StatelessWidget {
               horizontal: 15,
               vertical: 5,
             ),
-            child: RichText(
-              text: const TextSpan(
-                text: 'Liked by ',
-                children: [
-                  TextSpan(
-                    text: 'durvesh_8403',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  TextSpan(
-                    text: ' and ',
-                  ),
-                  TextSpan(
-                    text: '34 others',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: StreamBuilder(
+                stream: FirebaseFirestore.instance
+                    .collection('posts')
+                    .doc(snap['postId'])
+                    .collection('likes')
+                    .orderBy('dateLiked', descending: true)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      snapshot.data!.docs.isEmpty) {
+                    return Container();
+                  } else {
+                    int data = snapshot.data!.docs.length;
+
+                    return RichText(
+                      text: TextSpan(
+                        text: 'Liked by ',
+                        children: [
+                          TextSpan(
+                            text: snapshot.data!.docs.first.data()['username'],
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                push(
+                                  context,
+                                  ViewProfileScreen(
+                                    username: snapshot.data!.docs.first
+                                        .data()['username'],
+                                  ),
+                                );
+                              },
+                          ),
+                          data == 1
+                              ? const TextSpan()
+                              : const TextSpan(
+                                  text: ' and ',
+                                ),
+                          data == 1
+                              ? const TextSpan()
+                              : TextSpan(
+                                  text:
+                                      '${snapshot.data!.docs.length - 1} others',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => push(
+                                          context,
+                                          LikesScreen(
+                                            likes: snapshot.data!.docs
+                                                .map((e) => e.data())
+                                                .toList(),
+                                          ),
+                                        ),
+                                ),
+                        ],
+                      ),
+                    );
+                  }
+                }),
           ),
           Container(
             alignment: Alignment.centerLeft,
@@ -175,6 +223,10 @@ class PostCard extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: ' ${snap['description']}',
+                    style: const TextStyle(
+                      height: 1.3,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
