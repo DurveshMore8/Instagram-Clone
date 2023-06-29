@@ -51,11 +51,17 @@ class _PostCardState extends State<PostCard> {
                         : NetworkImage(widget.snap['profilePic'])),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(
-                    '${widget.snap['username']}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
+                  child: GestureDetector(
+                    onTap: () => push(
+                      context,
+                      ViewProfileScreen(username: widget.snap['username']),
+                    ),
+                    child: Text(
+                      '${widget.snap['username']}',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -66,63 +72,64 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
           StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('posts')
-                  .doc(widget.snap['postId'])
-                  .collection('likes')
-                  .where('uid', isEqualTo: user.uid)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                return GestureDetector(
-                  onDoubleTap: () async {
-                    if (snapshot.data!.docs.isEmpty) {
-                      LikeServices()
-                          .likePost(widget.snap['postId'], context)
-                          .then((value) => null);
-                    } else {
-                      LikeServices()
-                          .dislikePost(widget.snap['postId'], context)
-                          .then((value) => null);
-                    }
-                    setState(() {
-                      isLikeAnimating = true;
-                    });
-                  },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: Image.network(
-                          '${widget.snap['url']}',
-                          fit: BoxFit.fill,
+            stream: FirebaseFirestore.instance
+                .collection('posts')
+                .doc(widget.snap['postId'])
+                .collection('likes')
+                .where('uid', isEqualTo: user.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              return GestureDetector(
+                onDoubleTap: () async {
+                  if (snapshot.data!.docs.isEmpty) {
+                    LikeServices()
+                        .likePost(widget.snap['postId'], context)
+                        .then((value) => null);
+                  } else {
+                    LikeServices()
+                        .dislikePost(widget.snap['postId'], context)
+                        .then((value) => null);
+                  }
+                  setState(() {
+                    isLikeAnimating = true;
+                  });
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: Image.network(
+                        '${widget.snap['url']}',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: isLikeAnimating ? 1 : 0,
+                      child: LikeAnimation(
+                        isAnimating: isLikeAnimating,
+                        duration: const Duration(
+                          microseconds: 400,
+                        ),
+                        onEnd: () {
+                          setState(() {
+                            isLikeAnimating = false;
+                          });
+                        },
+                        child: const Icon(
+                          Icons.favorite,
+                          color: primaryColor,
+                          size: 120,
                         ),
                       ),
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        opacity: isLikeAnimating ? 1 : 0,
-                        child: LikeAnimation(
-                          isAnimating: isLikeAnimating,
-                          duration: const Duration(
-                            microseconds: 400,
-                          ),
-                          onEnd: () {
-                            setState(() {
-                              isLikeAnimating = false;
-                            });
-                          },
-                          child: const Icon(
-                            Icons.favorite,
-                            color: primaryColor,
-                            size: 120,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
@@ -173,7 +180,7 @@ class _PostCardState extends State<PostCard> {
                         },
                       ),
                       const SizedBox(width: 20),
-                      InkWell(
+                      GestureDetector(
                         onTap: () => push(
                           context,
                           CommentScreen(post: widget.snap),
@@ -207,71 +214,72 @@ class _PostCardState extends State<PostCard> {
               vertical: 5,
             ),
             child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('posts')
-                    .doc(widget.snap['postId'])
-                    .collection('likes')
-                    .orderBy('dateLiked', descending: true)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting ||
-                      snapshot.data!.docs.isEmpty) {
-                    return Container();
-                  } else {
-                    int data = snapshot.data!.docs.length;
+              stream: FirebaseFirestore.instance
+                  .collection('posts')
+                  .doc(widget.snap['postId'])
+                  .collection('likes')
+                  .orderBy('dateLiked', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    snapshot.data!.docs.isEmpty) {
+                  return Container();
+                } else {
+                  int data = snapshot.data!.docs.length;
 
-                    return RichText(
-                      text: TextSpan(
-                        text: 'Liked by ',
-                        children: [
-                          TextSpan(
-                            text: snapshot.data!.docs.first.data()['username'],
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = snapshot.data!.docs.first
-                                          .data()['username'] ==
-                                      user.username
-                                  ? () {}
-                                  : () {
-                                      push(
-                                        context,
-                                        ViewProfileScreen(
-                                          username: snapshot.data!.docs.first
-                                              .data()['username'],
-                                        ),
-                                      );
-                                    },
+                  return RichText(
+                    text: TextSpan(
+                      text: 'Liked by ',
+                      children: [
+                        TextSpan(
+                          text: snapshot.data!.docs.first.data()['username'],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
                           ),
-                          data == 1
-                              ? const TextSpan()
-                              : const TextSpan(
-                                  text: ' and ',
-                                ),
-                          data == 1
-                              ? const TextSpan()
-                              : TextSpan(
-                                  text:
-                                      '${snapshot.data!.docs.length - 1} others',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => push(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap =
+                                snapshot.data!.docs.first.data()['username'] ==
+                                        user.username
+                                    ? () {}
+                                    : () {
+                                        push(
                                           context,
-                                          LikesScreen(
-                                            likes: snapshot.data!.docs
-                                                .map((e) => e.data())
-                                                .toList(),
+                                          ViewProfileScreen(
+                                            username: snapshot.data!.docs.first
+                                                .data()['username'],
                                           ),
-                                        ),
+                                        );
+                                      },
+                        ),
+                        data == 1
+                            ? const TextSpan()
+                            : const TextSpan(
+                                text: ' and ',
+                              ),
+                        data == 1
+                            ? const TextSpan()
+                            : TextSpan(
+                                text:
+                                    '${snapshot.data!.docs.length - 1} others',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
                                 ),
-                        ],
-                      ),
-                    );
-                  }
-                }),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () => push(
+                                        context,
+                                        LikesScreen(
+                                          likes: snapshot.data!.docs
+                                              .map((e) => e.data())
+                                              .toList(),
+                                        ),
+                                      ),
+                              ),
+                      ],
+                    ),
+                  );
+                }
+              },
+            ),
           ),
           Container(
             alignment: Alignment.centerLeft,
@@ -282,6 +290,11 @@ class _PostCardState extends State<PostCard> {
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => push(
+                        context,
+                        ViewProfileScreen(username: widget.snap['username']),
+                      ),
                 children: [
                   TextSpan(
                     text: ' ${widget.snap['description']}',
@@ -311,7 +324,7 @@ class _PostCardState extends State<PostCard> {
                       snapshot.data!.docs.isEmpty) {
                     return Container();
                   } else {
-                    return InkWell(
+                    return GestureDetector(
                       onTap: () => push(
                         context,
                         CommentScreen(post: widget.snap),
