@@ -6,6 +6,7 @@ import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/home/screens/comment_screen.dart';
 import 'package:new_instagram_clone/features/home/screens/likes_screen.dart';
 import 'package:new_instagram_clone/features/home/services/like_services.dart';
+import 'package:new_instagram_clone/features/home/widgets/like_animation.dart';
 import 'package:new_instagram_clone/features/search/screens/view_profile_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
@@ -13,15 +14,22 @@ import 'package:new_instagram_clone/utils/colors.dart';
 import 'package:new_instagram_clone/utils/get_period.dart';
 import 'package:provider/provider.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final Map<String, dynamic> snap;
   const PostCard({super.key, required this.snap});
 
   @override
+  State<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  bool isLikeAnimating = false;
+
+  @override
   Widget build(BuildContext context) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    DateTime published =
-        DateTime.fromMillisecondsSinceEpoch(snap['published'].seconds * 1000);
+    DateTime published = DateTime.fromMillisecondsSinceEpoch(
+        widget.snap['published'].seconds * 1000);
     int difference = DateTime.now().difference(published).inSeconds;
     String period = getPeriod(difference);
     UserModel user = Provider.of<UserProvider>(context, listen: false).getUser;
@@ -37,14 +45,14 @@ class PostCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                     radius: 15,
-                    backgroundImage: snap['profilePic'].isEmpty
+                    backgroundImage: widget.snap['profilePic'].isEmpty
                         ? const AssetImage('assets/images/defaultProfile.jpg')
                             as ImageProvider
-                        : NetworkImage(snap['profilePic'])),
+                        : NetworkImage(widget.snap['profilePic'])),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    '${snap['username']}',
+                    '${widget.snap['username']}',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
@@ -57,14 +65,64 @@ class PostCard extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Image.network(
-              '${snap['url']}',
-              fit: BoxFit.fill,
-            ),
-          ),
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('posts')
+                  .doc(widget.snap['postId'])
+                  .collection('likes')
+                  .where('uid', isEqualTo: user.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                return GestureDetector(
+                  onDoubleTap: () async {
+                    if (snapshot.data!.docs.isEmpty) {
+                      LikeServices()
+                          .likePost(widget.snap['postId'], context)
+                          .then((value) => null);
+                    } else {
+                      LikeServices()
+                          .dislikePost(widget.snap['postId'], context)
+                          .then((value) => null);
+                    }
+                    setState(() {
+                      isLikeAnimating = true;
+                    });
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Image.network(
+                          '${widget.snap['url']}',
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 200),
+                        opacity: isLikeAnimating ? 1 : 0,
+                        child: LikeAnimation(
+                          isAnimating: isLikeAnimating,
+                          duration: const Duration(
+                            microseconds: 400,
+                          ),
+                          onEnd: () {
+                            setState(() {
+                              isLikeAnimating = false;
+                            });
+                          },
+                          child: const Icon(
+                            Icons.favorite,
+                            color: primaryColor,
+                            size: 120,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
@@ -75,7 +133,7 @@ class PostCard extends StatelessWidget {
                       StreamBuilder(
                         stream: firestore
                             .collection('posts')
-                            .doc(snap['postId'])
+                            .doc(widget.snap['postId'])
                             .collection('likes')
                             .where('uid', isEqualTo: user.uid)
                             .snapshots(),
@@ -90,7 +148,7 @@ class PostCard extends StatelessWidget {
                             return GestureDetector(
                               onTap: () {
                                 LikeServices()
-                                    .dislikePost(snap['postId'], context)
+                                    .dislikePost(widget.snap['postId'], context)
                                     .then((value) => null);
                               },
                               child: const SvgIcons(
@@ -103,7 +161,7 @@ class PostCard extends StatelessWidget {
                             return GestureDetector(
                               onTap: () {
                                 LikeServices()
-                                    .likePost(snap['postId'], context)
+                                    .likePost(widget.snap['postId'], context)
                                     .then((value) => null);
                               },
                               child: const SvgIcons(
@@ -118,7 +176,7 @@ class PostCard extends StatelessWidget {
                       InkWell(
                         onTap: () => push(
                           context,
-                          CommentScreen(post: snap),
+                          CommentScreen(post: widget.snap),
                         ),
                         child: const SvgIcons(
                           path: 'assets/icons/comments.svg',
@@ -151,7 +209,7 @@ class PostCard extends StatelessWidget {
             child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('posts')
-                    .doc(snap['postId'])
+                    .doc(widget.snap['postId'])
                     .collection('likes')
                     .orderBy('dateLiked', descending: true)
                     .snapshots(),
@@ -172,15 +230,19 @@ class PostCard extends StatelessWidget {
                               fontWeight: FontWeight.w500,
                             ),
                             recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                push(
-                                  context,
-                                  ViewProfileScreen(
-                                    username: snapshot.data!.docs.first
-                                        .data()['username'],
-                                  ),
-                                );
-                              },
+                              ..onTap = snapshot.data!.docs.first
+                                          .data()['username'] ==
+                                      user.username
+                                  ? () {}
+                                  : () {
+                                      push(
+                                        context,
+                                        ViewProfileScreen(
+                                          username: snapshot.data!.docs.first
+                                              .data()['username'],
+                                        ),
+                                      );
+                                    },
                           ),
                           data == 1
                               ? const TextSpan()
@@ -216,13 +278,13 @@ class PostCard extends StatelessWidget {
             padding: const EdgeInsets.only(left: 15),
             child: RichText(
               text: TextSpan(
-                text: '${snap['username']}',
+                text: '${widget.snap['username']}',
                 style: const TextStyle(
                   fontWeight: FontWeight.w500,
                 ),
                 children: [
                   TextSpan(
-                    text: ' ${snap['description']}',
+                    text: ' ${widget.snap['description']}',
                     style: const TextStyle(
                       height: 1.3,
                       fontWeight: FontWeight.w400,
@@ -241,7 +303,7 @@ class PostCard extends StatelessWidget {
             child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection('posts')
-                    .doc(snap['postId'])
+                    .doc(widget.snap['postId'])
                     .collection('comments')
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -252,7 +314,7 @@ class PostCard extends StatelessWidget {
                     return InkWell(
                       onTap: () => push(
                         context,
-                        CommentScreen(post: snap),
+                        CommentScreen(post: widget.snap),
                       ),
                       child: Text(
                         'View all ${snapshot.data!.docs.length} comments',
