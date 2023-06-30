@@ -325,6 +325,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 5),
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('posts')
+              .where('uid', isEqualTo: user.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: Text('No Posts Yet'),
+              );
+            }
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+              ),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (BuildContext context, int index) {
+                return InkWell(
+                  onTap: () {},
+                  child: Container(
+                    padding: const EdgeInsets.all(5),
+                    child: Image.network(
+                      snapshot.data!.docs.reversed
+                          .elementAt(index)
+                          .data()['url'],
+                      width: (MediaQuery.of(context).size.width / 3) - 10,
+                      height: (MediaQuery.of(context).size.width / 3) - 10,
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 }
