@@ -23,9 +23,15 @@ class _PostsScreenState extends State<PostsScreen> {
           onTap: () => pop(context),
           child: const Icon(
             Icons.arrow_back,
+            size: 30,
           ),
         ),
-        title: const Text('Posts'),
+        title: const Text(
+          'Posts',
+          style: TextStyle(
+            fontSize: 20,
+          ),
+        ),
       ),
       body: ListView.builder(
         itemCount: widget.posts.length,
