@@ -5,6 +5,7 @@ import 'package:new_instagram_clone/common/svg_icon.dart';
 import 'package:new_instagram_clone/features/authentication/screens/signin_screen.dart';
 import 'package:new_instagram_clone/features/authentication/services/signout_user.dart';
 import 'package:new_instagram_clone/features/profile/screens/edit_profile_screen.dart';
+import 'package:new_instagram_clone/features/profile/screens/posts_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
@@ -344,14 +345,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                  onTap: () {},
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            PostsScreen(
+                                posts: snapshot.data!.docs.reversed.toList()),
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) {
+                          return SlideTransition(
+                            position: Tween<Offset>(
+                              begin: const Offset(1.0, 0.0),
+                              end: Offset.zero,
+                            ).animate(animation),
+                            child: child,
+                          );
+                        },
+                        transitionDuration: const Duration(milliseconds: 300),
+                      ),
+                    );
+                  },
                   child: Container(
                     padding: const EdgeInsets.all(5),
                     child: Image.network(
                       snapshot.data!.docs.reversed
                           .elementAt(index)
                           .data()['url'],
+                      fit: BoxFit.contain,
                       width: (MediaQuery.of(context).size.width / 3) - 10,
                       height: (MediaQuery.of(context).size.width / 3) - 10,
                     ),
