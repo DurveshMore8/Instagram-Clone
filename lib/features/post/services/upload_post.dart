@@ -20,7 +20,7 @@ class UploadPost {
       String postId = const Uuid().v1();
       UserModel user = await getCurrentUser();
 
-      Reference ref = _storage.ref().child('posts').child(user.uid);
+      Reference ref = _storage.ref().child('posts').child(postId);
       UploadTask uploadTask = ref.putData(image);
       TaskSnapshot snap = await uploadTask;
       String downloadUrl = await snap.ref.getDownloadURL();

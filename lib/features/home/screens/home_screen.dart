@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
-import 'package:new_instagram_clone/features/home/widgets/post_card.dart';
+import 'package:new_instagram_clone/common/post_card.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
