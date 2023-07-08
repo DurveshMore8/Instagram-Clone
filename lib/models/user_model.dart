@@ -29,4 +29,17 @@ class UserModel {
         'profilePic': profilePic,
         'bio': bio,
       };
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      uid: map['uid'],
+      name: map['name'],
+      username: map['username'],
+      phone: map['phone'],
+      email: map['email'],
+      gender: map['gender'],
+      profilePic: map['profilePic'],
+      bio: map['bio'],
+    );
+  }
 }
