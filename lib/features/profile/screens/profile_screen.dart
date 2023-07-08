@@ -346,27 +346,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            PostsScreen(
-                                posts: snapshot.data!.docs.reversed.toList()),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          return SlideTransition(
-                            position: Tween<Offset>(
-                              begin: const Offset(1.0, 0.0),
-                              end: Offset.zero,
-                            ).animate(animation),
-                            child: child,
-                          );
-                        },
-                        transitionDuration: const Duration(milliseconds: 300),
-                      ),
-                    );
-                  },
+                  onTap: () => pushSwipe(
+                    context,
+                    PostsScreen(
+                      posts: snapshot.data!.docs.reversed.toList(),
+                    ),
+                  ),
                   child: Container(
                     padding: const EdgeInsets.all(5),
                     child: Image.network(
