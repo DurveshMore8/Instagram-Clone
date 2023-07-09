@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
+import 'package:new_instagram_clone/features/messengar/screens/conversation_screen.dart';
 import 'package:new_instagram_clone/features/search/services/follow_unfollow.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
 import 'package:new_instagram_clone/providers/user_provider.dart';
@@ -285,7 +286,12 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                             }),
                         const SizedBox(width: 5),
                         InkWell(
-                          onTap: () {},
+                          onTap: () => push(
+                            context,
+                            ConversationScreen(
+                              user: UserModel.fromMap(user),
+                            ),
+                          ),
                           child: Container(
                             width:
                                 MediaQuery.of(context).size.width * (35 / 100),
