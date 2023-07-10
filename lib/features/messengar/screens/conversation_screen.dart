@@ -25,12 +25,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
   final MessengarService _messengarService = MessengarService();
 
   void sendMessage() {
-    _messengarService.message(
-      context: context,
-      uid: widget.user.uid,
-      message: _messageController.text,
-    );
-    _messageController.clear();
+    if (_messageController.text.trim().isNotEmpty) {
+      _messengarService.message(
+        context: context,
+        uid: widget.user.uid,
+        message: _messageController.text.trim(),
+      );
+      _messageController.clear();
+    }
   }
 
   @override

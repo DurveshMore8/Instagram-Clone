@@ -35,7 +35,7 @@ class MessengarService {
           .set(sender.toMap());
 
       MessageModel receiver = MessageModel(
-        uid: uid,
+        uid: user.uid,
         message: message,
         isMe: false,
         timeStamp: DateTime.now(),
