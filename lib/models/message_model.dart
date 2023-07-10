@@ -17,4 +17,13 @@ class MessageModel {
         'isMe': isMe,
         'timeStamp': timeStamp,
       };
+
+  factory MessageModel.fromMap(Map<String, dynamic> map) {
+    return MessageModel(
+      uid: map['uid'],
+      message: map['message'],
+      isMe: map['isMe'],
+      timeStamp: map['timeStamp'].toDate(),
+    );
+  }
 }
