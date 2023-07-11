@@ -140,10 +140,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 messages.sort((a, b) {
                   Timestamp dateA = a['timeStamp'] as Timestamp;
                   Timestamp dateB = b['timeStamp'] as Timestamp;
-                  return dateA.compareTo(dateB);
+                  return dateB.compareTo(dateA);
                 });
 
                 return ListView.builder(
+                  reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     return Row(
