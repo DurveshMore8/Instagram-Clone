@@ -8,10 +8,9 @@ import 'package:new_instagram_clone/features/authentication/services/signin_user
 import 'package:new_instagram_clone/features/authentication/services/signup_user.dart.dart';
 import 'package:new_instagram_clone/features/authentication/widgets/auth_button.dart';
 import 'package:new_instagram_clone/features/authentication/widgets/input_textfield.dart';
-import 'package:new_instagram_clone/common/alert_dialog.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
-import 'package:new_instagram_clone/features/mainscreen/screens/main_screen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
+import 'package:new_instagram_clone/utils/utils.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -67,25 +66,14 @@ class _SignupScreenState extends State<SignupScreen> {
     if (res == 'success') {
       signinUser(emailController.text, passwordController.text).then((result) {
         if (result == 'success') {
-          showAlertDialog(
+          pushReplacement(
             context,
-            'Account Created Successfully',
-            'Add More Info',
-            'Go to Account',
-            () => pushReplacement(context, const MoreinfoScreen()),
-            () => pushReplacement(context, const MainScreen()),
+            const MoreinfoScreen(),
           );
         }
       });
     } else {
-      showAlertDialog(
-        context,
-        res,
-        'Try Again',
-        'Cancel',
-        () => pop(context),
-        () => pushReplacement(context, const SigninScreen()),
-      );
+      showSnackBar(context, res);
     }
     setState(() {
       isEmpty = false;

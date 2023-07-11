@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:new_instagram_clone/common/alert_dialog.dart';
 import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/common/pick_image.dart';
 import 'package:new_instagram_clone/common/svg_icon.dart';
@@ -13,6 +12,7 @@ import 'package:new_instagram_clone/features/authentication/widgets/auth_button.
 import 'package:new_instagram_clone/features/authentication/widgets/bio_textfield.dart';
 import 'package:new_instagram_clone/features/authentication/widgets/options_slider.dart';
 import 'package:new_instagram_clone/features/mainscreen/screens/main_screen.dart';
+import 'package:new_instagram_clone/utils/utils.dart';
 
 class MoreinfoScreen extends StatefulWidget {
   const MoreinfoScreen({super.key});
@@ -51,14 +51,7 @@ class _MoreinfoScreenState extends State<MoreinfoScreen> {
     if (res == 'success') {
       pushReplacement(context, const MainScreen());
     } else {
-      showAlertDialog(
-        context,
-        res,
-        'Try Again',
-        'Go To Account',
-        () => pop(context),
-        () => pushReplacement(context, const MainScreen()),
-      );
+      showSnackBar(context, res);
     }
 
     setState(() {

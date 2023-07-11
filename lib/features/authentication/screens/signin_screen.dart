@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:new_instagram_clone/common/alert_dialog.dart';
 import 'package:new_instagram_clone/features/authentication/screens/signup_screen.dart';
 import 'package:new_instagram_clone/features/authentication/services/signin_user.dart';
 import 'package:new_instagram_clone/features/authentication/widgets/auth_button.dart';
@@ -10,6 +9,7 @@ import 'package:new_instagram_clone/features/authentication/widgets/input_textfi
 import 'package:new_instagram_clone/common/navigation.dart';
 import 'package:new_instagram_clone/features/mainscreen/screens/main_screen.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
+import 'package:new_instagram_clone/utils/utils.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -49,14 +49,7 @@ class _SigninScreenState extends State<SigninScreen> {
     if (res == 'success') {
       pushReplacement(context, const MainScreen());
     } else {
-      showAlertDialog(
-        context,
-        res,
-        'Try Again',
-        'Sign up',
-        () => pop(context),
-        () => pushReplacement(context, const SignupScreen()),
-      );
+      showSnackBar(context, res);
     }
     setState(() {
       isEmpty = false;
