@@ -8,3 +8,4 @@ const Color redColor = Colors.red;
 
 Color textfieldColor = Colors.grey.shade900;
 Color bottomSheetColor = Colors.black.withOpacity(0.65);
+Color purpleColor = Colors.deepPurple.shade800;

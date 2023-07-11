@@ -1,6 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:new_instagram_clone/common/navigation.dart';
+import 'package:new_instagram_clone/features/messengar/services/messengar_service.dart';
+import 'package:new_instagram_clone/features/messengar/widgets/message_card.dart';
+import 'package:new_instagram_clone/features/search/screens/view_profile_screen.dart';
 import 'package:new_instagram_clone/models/user_model.dart';
+import 'package:new_instagram_clone/providers/user_provider.dart';
 import 'package:new_instagram_clone/utils/colors.dart';
+import 'package:provider/provider.dart';
 
 class ConversationScreen extends StatefulWidget {
   final UserModel user;
@@ -14,8 +21,30 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
+  final TextEditingController _messageController = TextEditingController();
+  final MessengarService _messengarService = MessengarService();
+
+  void sendMessage() {
+    if (_messageController.text.trim().isNotEmpty) {
+      _messengarService.message(
+        context: context,
+        uid: widget.user.uid,
+        message: _messageController.text.trim(),
+      );
+      _messageController.clear();
+    }
+  }
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context).getUser;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
@@ -33,26 +62,34 @@ class _ConversationScreenState extends State<ConversationScreen> {
               ),
             ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.user.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
+              child: GestureDetector(
+                onTap: () => push(
+                  context,
+                  ViewProfileScreen(
+                    username: widget.user.username,
                   ),
-                  Text(
-                    widget.user.username,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: greyColor,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.user.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                    Text(
+                      widget.user.username,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: greyColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
@@ -84,8 +121,46 @@ class _ConversationScreenState extends State<ConversationScreen> {
       ),
       body: Column(
         children: [
-          const Expanded(
-            child: Text('Helo'),
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('messages')
+                  .doc(userProvider.uid)
+                  .collection('convo')
+                  .where('uid', isEqualTo: widget.user.uid)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Container();
+                }
+
+                List messages =
+                    snapshot.data!.docs.map((e) => e.data()).toList();
+
+                messages.sort((a, b) {
+                  Timestamp dateA = a['timeStamp'] as Timestamp;
+                  Timestamp dateB = b['timeStamp'] as Timestamp;
+                  return dateA.compareTo(dateB);
+                });
+
+                return ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      mainAxisAlignment: messages[index]['isMe']
+                          ? MainAxisAlignment.end
+                          : MainAxisAlignment.start,
+                      children: [
+                        MessageCard(
+                          text: messages[index]['message'],
+                          isMe: messages[index]['isMe'],
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ),
           Container(
             width: double.infinity,
@@ -108,15 +183,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     right: 10,
                   ),
                   child: CircleAvatar(
-                    backgroundColor: Colors.deepPurple.shade900,
-                    child: const Icon(
-                      Icons.camera_alt,
+                    backgroundColor: purpleColor,
+                    child: Icon(
+                      _messageController.text.isEmpty
+                          ? Icons.camera_alt
+                          : Icons.search,
                       color: primaryColor,
                     ),
                   ),
                 ),
                 Expanded(
                   child: TextFormField(
+                    controller: _messageController,
                     maxLines: null,
                     keyboardType: TextInputType.multiline,
                     decoration: const InputDecoration(
@@ -127,39 +205,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.mic_none_outlined,
-                      size: 30,
+                GestureDetector(
+                  onTap: sendMessage,
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      right: 20,
                     ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.image_sharp,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                  ),
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: const Icon(
-                      Icons.gif_box_outlined,
-                      size: 30,
+                    child: Text(
+                      'Send',
+                      style: TextStyle(
+                        color: purpleColor,
+                        fontSize: 17,
+                      ),
                     ),
                   ),
                 ),
